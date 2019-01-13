@@ -4,8 +4,15 @@ import sys
 import getopt
 
 
-def main(argv):
+def downloadYouTube(url, out):
+    yt = YouTube(url)
+    yt = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first()
+    if not os.path.exists(out):
+        os.makedirs(out)
+    yt.download(out)
 
+
+def main(argv):
     try:
         opts, args = getopt.getopt(argv, "i:o:")
 
@@ -18,13 +25,6 @@ def main(argv):
 
             elif opt == "-o":
                 path = arg
-
-        def downloadYouTube(url, out):
-            yt = YouTube(url)
-            yt = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first()
-            if not os.path.exists(out):
-                os.makedirs(out)
-            yt.download(out)
 
         if videourl != "" and path != "":
             downloadYouTube(videourl, path)
